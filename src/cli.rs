@@ -1,4 +1,5 @@
 use clap::clap_derive::{Parser, Subcommand};
+use clap_complete::shells::Shell;
 
 #[derive(Clone, Debug, Parser)]
 #[command(name = "nx", about = "Command wrapper for my nixos system")]
@@ -43,4 +44,9 @@ pub enum SubCommand {
         /// Command to run (default zsh)
         command: Option<String>,
     },
+    /// Generate completions to stdout
+    Completions {
+        /// Shell for which to generate completions
+        shell: Shell,
+    }
 }

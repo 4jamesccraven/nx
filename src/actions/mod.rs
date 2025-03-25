@@ -1,5 +1,6 @@
 mod build;
 mod clean;
+mod completions;
 mod develop;
 mod push;
 mod revert;
@@ -7,6 +8,7 @@ mod update;
 
 pub use build::build;
 pub use clean::clean;
+pub use completions::completions;
 pub use develop::develop;
 pub use push::push;
 pub use revert::revert;

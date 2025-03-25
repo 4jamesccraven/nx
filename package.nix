@@ -13,11 +13,11 @@ rustPlatform.buildRustPackage {
     installShellFiles
   ];
 
-  preFixp = ''
+  preFixup = ''
     mkdir completions
-    cp $out/_nx completions
-    cp $out/nx.bash completions
-    cp $out/nx.fish completions
+    $out/bin/nx completions bash > completions/nx.bash
+    $out/bin/nx completions zsh > completions/nx.zsh
+    $out/bin/nx completions fish > completions/nx.fish
 
     installShellCompletion completions/*
   '';

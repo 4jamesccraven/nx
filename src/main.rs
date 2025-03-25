@@ -19,6 +19,10 @@ fn main() {
         Update { shells_only } => update(shells_only),
         Revert => revert(),
         Develop { shell, command } => develop(shell, command),
+        Completions { shell } => {
+            completions(shell);
+            Ok(())
+        },
     };
 
     if let Err(e) = ok {
