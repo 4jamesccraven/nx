@@ -12,7 +12,7 @@ pub fn clean(no_optimisation: bool, no_cache: bool) -> Result<(), String> {
     run_command!("nx build --fast")?;
 
     if !no_cache {
-        run_command!("nx update --shells")?;
+        run_command!("nx update --shells-only")?;
     }
 
     if !no_optimisation {
