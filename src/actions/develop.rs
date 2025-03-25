@@ -1,12 +1,14 @@
 use std::process::Command;
 
 pub fn develop(shell: Option<String>, command: Option<String>) -> Result<(), String> {
+    // Set defaults if not provided
     let shell = shell.unwrap_or("default".into());
     let command = command.unwrap_or("zsh".into());
 
-    let local = Command::new("nix")
+    let source_local = Command::new("nix")
         .args([
             "develop".into(),
+            // in current directory
             format!(".#{}", shell),
             "-c".into(),
             command.clone(),
@@ -14,13 +16,14 @@ pub fn develop(shell: Option<String>, command: Option<String>) -> Result<(), Str
         .status()
         .map_err(|_| "nix develop brokeded")?;
 
-    if local.success() {
+    if source_local.success() {
         return Ok(());
     }
 
-    let _ = Command::new("nix")
+    let _source_from_config = Command::new("nix")
         .args([
             "develop".into(),
+            // from config. TODO: fix hardcoding.
             format!("/home/jamescraven/nixos#{}", shell),
             "-c".into(),
             command,

@@ -16,13 +16,18 @@ pub use update::update;
 
 use std::env;
 
+/// Sets the environment's current directory to the nixos
+/// config directory. TODO: remove hardcoding.
 pub fn change_to_config() -> Result<(), String> {
     env::set_current_dir("/home/jamescraven/nixos")
         .map_err(|_| "unable to enter config directory".into())
 }
 
+/// Attempts to run the provided command, returning an error message
+/// if it fails
 #[macro_export]
 macro_rules! run_command {
+    // Command+args as a string
     ($cmd:expr) => {{
         let mut parsed = $cmd.split_whitespace();
 
@@ -41,6 +46,7 @@ macro_rules! run_command {
 
         status
     }};
+    // Command as a string, args as an iterable of strings
     ($cmd:expr, $args:expr) => {{
         let mut output = std::process::Command::new($cmd)
             .args($args)
@@ -57,6 +63,7 @@ macro_rules! run_command {
     }};
 }
 
+/// like `run_command!`, but with stderr suppressed
 #[macro_export]
 macro_rules! run_command_silent {
     ($cmd:expr) => {{

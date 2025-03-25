@@ -6,6 +6,26 @@ use std::process::Command;
 pub fn revert() -> Result<(), String> {
     change_to_config()?;
 
+    let _print_warning = reversion_warning()?;
+
+    let mut response = String::new();
+
+    std::io::stdin()
+        .read_line(&mut response)
+        .expect("This shouldn't fail, and it's okay if it does");
+
+    match response.as_str() {
+        "y" | "Y" => run_command!("git reset --hard HEAD")?,
+        _ => {
+            println!("Successfully aborted reversion.");
+        }
+    }
+
+    Ok(())
+}
+
+/// Logic to warn user about the reverting the config
+fn reversion_warning() -> Result<(), String> {
     let git_commit = Command::new("git")
         .args(["log", "-1", "--pretty=%B"])
         .output()
@@ -23,19 +43,6 @@ pub fn revert() -> Result<(), String> {
     );
     println!("    {}", git_commit.trim_end_matches('\n'));
     println!("Are you sure? [y/N]");
-
-    let mut response = String::new();
-
-    std::io::stdin()
-        .read_line(&mut response)
-        .expect("This shouldn't fail, and it's okay if it does");
-
-    match response.as_str() {
-        "y" | "Y" => run_command!("git reset --hard HEAD")?,
-        _ => {
-            println!("Successfully aborted reversion.");
-        }
-    }
 
     Ok(())
 }
