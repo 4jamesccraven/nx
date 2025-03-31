@@ -1,9 +1,12 @@
+use crate::config::Config;
+
 use std::process::Command;
 
 pub fn develop(shell: Option<String>, command: Option<String>) -> Result<(), String> {
     // Set defaults if not provided
     let shell = shell.unwrap_or("default".into());
     let command = command.unwrap_or("zsh".into());
+    let config = Config::get()?;
 
     let source_local = Command::new("nix")
         .args([
@@ -23,8 +26,7 @@ pub fn develop(shell: Option<String>, command: Option<String>) -> Result<(), Str
     let _source_from_config = Command::new("nix")
         .args([
             "develop".into(),
-            // from config. TODO: fix hardcoding.
-            format!("/home/jamescraven/nixos#{}", shell),
+            format!("{}#{}", config.nixos_config_dir, shell),
             "-c".into(),
             command,
         ])

@@ -14,12 +14,16 @@ pub use push::push;
 pub use revert::revert;
 pub use update::update;
 
+use crate::config::Config;
+
 use std::env;
 
 /// Sets the environment's current directory to the nixos
 /// config directory. TODO: remove hardcoding.
 pub fn change_to_config() -> Result<(), String> {
-    env::set_current_dir("/home/jamescraven/nixos")
+    let config = Config::get()?;
+
+    env::set_current_dir(config.nixos_config_dir)
         .map_err(|_| "unable to enter config directory".into())
 }
 

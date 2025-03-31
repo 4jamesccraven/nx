@@ -1,5 +1,6 @@
 mod actions;
 mod cli;
+mod config;
 
 use actions::*;
 use cli::{Cli, SubCommand::*};

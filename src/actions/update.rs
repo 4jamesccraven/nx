@@ -1,9 +1,12 @@
+use crate::config::Config;
 use super::{change_to_config, run_command};
 
 use std::fs;
 
 pub fn update(shells: bool) -> Result<(), String> {
     change_to_config()?;
+
+    let config = Config::get()?;
 
     if !shells {
         run_command("nix flake update")?;
@@ -40,7 +43,7 @@ pub fn update(shells: bool) -> Result<(), String> {
     }
 
     for shell in shells_to_cache {
-        let shell_path = format!("/home/jamescraven/nixos#{}", shell);
+        let shell_path = format!("{}#{}", config.nixos_config_dir, shell);
         let command = format!("nix develop {shell_path} --command echo");
         run_command(command.as_ref())?;
     }
