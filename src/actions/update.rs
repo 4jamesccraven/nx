@@ -1,5 +1,4 @@
-use super::change_to_config;
-use crate::run_command;
+use super::{change_to_config, run_command};
 
 use std::fs;
 
@@ -7,8 +6,8 @@ pub fn update(shells: bool) -> Result<(), String> {
     change_to_config()?;
 
     if !shells {
-        run_command!("nix flake update")?;
-        run_command!("nx build --fast")?;
+        run_command("nix flake update")?;
+        run_command("nx build --fast")?;
     }
 
     let mut shells_to_cache: Vec<String> = Vec::new();
@@ -42,7 +41,8 @@ pub fn update(shells: bool) -> Result<(), String> {
 
     for shell in shells_to_cache {
         let shell_path = format!("/home/jamescraven/nixos#{}", shell);
-        run_command!("nix", ["develop", shell_path.as_str(), "--command", "echo"])?;
+        let command = format!("nix develop {shell_path} --command echo");
+        run_command(command.as_ref())?;
     }
 
     Ok(())

@@ -25,79 +25,34 @@ pub fn change_to_config() -> Result<(), String> {
 
 /// Attempts to run the provided command, returning an error message
 /// if it fails
-#[macro_export]
-macro_rules! run_command {
-    // Command+args as a string
-    ($cmd:expr) => {{
-        let mut parsed = $cmd.split_whitespace();
+pub fn run_command(cmd: &str) -> Result<(), String> {
+    let status = std::process::Command::new("sh")
+        .arg("-c")
+        .arg(&cmd)
+        .status()
+        .map_err(|_| format!("unable to run {}", cmd))?;
 
-        let cmd = parsed.next().unwrap();
+    if !status.success() {
+        let msg = format!("`{}` failed.", cmd);
+        return Err(msg);
+    }
 
-        let mut output = std::process::Command::new(cmd)
-            .args(parsed)
-            .spawn()
-            .map_err(|_| format!("unable to run {}", $cmd))?;
-
-        if let Err(_) = output.wait() {
-            return Err(format!("error running {}", $cmd));
-        }
-
-        let status: Result<(), String> = Ok(());
-
-        status
-    }};
-    // Command as a string, args as an iterable of strings
-    ($cmd:expr, $args:expr) => {{
-        let mut output = std::process::Command::new($cmd)
-            .args($args)
-            .spawn()
-            .map_err(|_| format!("unable to run {}", $cmd))?;
-
-        if let Err(_) = output.wait() {
-            return Err(format!("error running {}", $cmd));
-        }
-
-        let status: Result<(), String> = Ok(());
-
-        status
-    }};
+    Ok(())
 }
 
-/// like `run_command!`, but with stderr suppressed
-#[macro_export]
-macro_rules! run_command_silent {
-    ($cmd:expr) => {{
-        let mut parsed = $cmd.split_whitespace();
+/// like `run_command`, but with stderr suppressed
+pub fn run_command_silent(cmd: &str) -> Result<(), String> {
+    let status = std::process::Command::new("sh")
+        .arg("-c")
+        .arg(&cmd)
+        .stderr(std::process::Stdio::null())
+        .status()
+        .map_err(|_| format!("unable to run {}", cmd))?;
 
-        let cmd = parsed.next().unwrap();
+    if !status.success() {
+        let msg = format!("`{}` failed.", cmd);
+        return Err(msg);
+    }
 
-        let mut output = std::process::Command::new(cmd)
-            .args(parsed)
-            .stderr(std::process::Stdio::null())
-            .spawn()
-            .map_err(|_| format!("unable to run {}", $cmd))?;
-
-        if let Err(_) = output.wait() {
-            return Err(format!("error running {}", $cmd));
-        }
-
-        let status: Result<(), String> = Ok(());
-
-        status
-    }};
-    ($cmd:expr, $args:expr) => {{
-        let mut output = std::process::Command::new($cmd)
-            .args($args)
-            .stderr(std::process::Stdio::null())
-            .spawn()
-            .map_err(|_| format!("unable to run {}", $cmd))?;
-
-        if let Err(_) = output.wait() {
-            return Err(format!("error running {}", $cmd));
-        }
-
-        let status: Result<(), String> = Ok(());
-
-        status
-    }};
+    Ok(())
 }
