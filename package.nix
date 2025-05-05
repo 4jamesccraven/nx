@@ -1,29 +1,28 @@
-{lib, pkgs}:
+{ lib, pkgs }:
 
 with pkgs;
+let
+  manifest = (pkgs.lib.importTOML ./Cargo.toml).package;
+in
 rustPlatform.buildRustPackage {
   pname = "nx";
-  version = "0.1.0";
+  version = manifest.version;
 
   src = ./.;
 
   cargoLock.lockFile = ./Cargo.lock;
 
-  nativeBuildInputs = [
-    installShellFiles
-  ];
+  nativeBuildInputs = [ installShellFiles ];
 
-  preFixup = ''
-    mkdir completions
-    $out/bin/nx completions bash > completions/nx.bash
-    $out/bin/nx completions zsh > completions/nx.zsh
-    $out/bin/nx completions fish > completions/nx.fish
-
-    installShellCompletion completions/*
+  postInstall = ''
+    installShellCompletion --cmd nx \
+      --bash <(COMPLETE=bash $out/bin/nx) \
+      --zsh  <(COMPLETE=zsh $out/bin/nx) \
+      --fish <(COMPLETE=fish $out/bin/nx) \
   '';
 
   meta = {
-    license = lib.licenses.mit;
+    license = lib.licenses.gpl3;
     mainProgram = "nx";
   };
 }

@@ -1,21 +1,21 @@
-use super::{change_to_config, run_command, run_command_silent};
+use crate::cli::Clean;
 
-pub fn clean(no_optimisation: bool, no_cache: bool) -> Result<(), String> {
+use super::{Result, change_to_config, cmd};
+
+pub fn clean(args: Clean) -> Result<()> {
     change_to_config()?;
 
-    run_command("sudo -v")?;
+    cmd!("sudo", "-v").run()?;
 
     println!("Collecting garbage...");
-    run_command_silent("sudo nix-collect-garbage -d")?;
-    run_command_silent("nix-collect-garbage -d")?;
-    run_command("nx build --fast")?;
+    cmd!("sudo", "nix-collect-garbage", "-d")
+        .stderr_null()
+        .run()?;
+    cmd!("nix-collect-garbage", "-d").stderr_null().run()?;
+    cmd!("nx", "build", "--fast").run()?;
 
-    if !no_cache {
-        run_command("nx update --shells-only")?;
-    }
-
-    if !no_optimisation {
-        run_command("nix store optimise")?;
+    if !args.no_optimise {
+        cmd!("nix", "store", "optimise").run()?;
     }
 
     Ok(())

@@ -1,15 +1,17 @@
-use super::{change_to_config, run_command};
+use crate::cli::Build;
 
-pub fn build(fast: bool) -> Result<(), String> {
+use super::{Result, change_to_config, cmd};
+
+pub fn build(args: Build) -> Result<()> {
     change_to_config()?;
 
-    run_command("sudo -v")?;
+    cmd!("sudo", "-v").run()?;
 
-    if !fast {
-        run_command("git pull")?;
+    if !args.fast {
+        cmd!("git", "pull").run()?;
     }
 
-    run_command("sudo nixos-rebuild switch --flake .")?;
+    cmd!("sudo", "nixos-rebuild", "switch", "--flake", ".").run()?;
 
     Ok(())
 }

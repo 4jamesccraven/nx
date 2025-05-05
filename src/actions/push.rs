@@ -1,13 +1,13 @@
-use super::{change_to_config, run_command};
+use super::{Result, change_to_config, cmd};
 
-pub fn push() -> Result<(), String> {
+pub fn push() -> Result<()> {
     change_to_config()?;
 
-    run_command("git add flake.lock")?;
+    cmd!("git", "add", "flake.lock").run()?;
 
-    run_command("git commit -m 'Chore: system update'")?;
+    cmd!("git", "commit", "-m", "'Chore:", "system", "update'").run()?;
 
-    run_command("git push")?;
+    cmd!("git", "push").run()?;
 
     Ok(())
 }

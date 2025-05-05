@@ -1,8 +1,8 @@
-use super::{change_to_config, run_command};
+use super::{Result, change_to_config, cmd};
 
 use std::process::Command;
 
-pub fn revert() -> Result<(), String> {
+pub fn revert() -> Result<()> {
     change_to_config()?;
 
     let _print_warning = reversion_warning()?;
@@ -16,7 +16,9 @@ pub fn revert() -> Result<(), String> {
     let response = response.trim();
 
     match response {
-        "y" | "Y" => run_command("git reset --hard HEAD")?,
+        "y" | "Y" => {
+            let _ = cmd!("git", "reset", "--hard", "HEAD").run()?;
+        }
         _ => {
             println!("Successfully aborted reversion.");
         }
@@ -26,11 +28,10 @@ pub fn revert() -> Result<(), String> {
 }
 
 /// Error message to warn user about the reverting the config
-fn reversion_warning() -> Result<(), String> {
+fn reversion_warning() -> Result<()> {
     let git_commit = Command::new("git")
         .args(["log", "-1", "--pretty=%B"])
-        .output()
-        .map_err(|_| "error running git log")?
+        .output()?
         .stdout;
 
     let git_commit =

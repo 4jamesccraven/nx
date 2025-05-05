@@ -5,25 +5,20 @@ mod config;
 use actions::*;
 use cli::{Cli, SubCommand::*};
 
-use clap::Parser;
+use clap::{CommandFactory, Parser};
+use clap_complete::CompleteEnv;
 
 fn main() {
+    CompleteEnv::with_factory(Cli::command).complete();
     let args = Cli::parse();
 
     let ok = match args.command {
-        Build { fast } => build(fast),
-        Clean {
-            no_optimise,
-            no_cache,
-        } => clean(no_optimise, no_cache),
+        Build(sub_args) => build(sub_args),
+        Clean(sub_args) => clean(sub_args),
         Push => push(),
-        Update { shells_only } => update(shells_only),
+        Update => update(),
         Revert => revert(),
-        Develop { shell, command } => develop(shell, command),
-        Completions { shell } => {
-            completions(shell);
-            Ok(())
-        },
+        Develop(sub_args) => develop(sub_args),
     };
 
     if let Err(e) = ok {
