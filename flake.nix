@@ -22,6 +22,8 @@
             rustc
             rustfmt
             libgcc
+
+            nh
           ];
 
           RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";

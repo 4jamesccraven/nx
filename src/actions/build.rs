@@ -11,7 +11,7 @@ pub fn build(args: Build) -> Result<()> {
         cmd!("git", "pull").run()?;
     }
 
-    cmd!("sudo", "nixos-rebuild", "switch", "--flake", ".").run()?;
+    cmd!("nh", "os", "switch", ".").run()?;
 
     Ok(())
 }

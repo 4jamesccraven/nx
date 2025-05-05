@@ -7,12 +7,7 @@ pub fn clean(args: Clean) -> Result<()> {
 
     cmd!("sudo", "-v").run()?;
 
-    println!("Collecting garbage...");
-    cmd!("sudo", "nix-collect-garbage", "-d")
-        .stderr_null()
-        .run()?;
-    cmd!("nix-collect-garbage", "-d").stderr_null().run()?;
-    cmd!("nx", "build", "--fast").run()?;
+    cmd!("nh", "clean", "all").run()?;
 
     if !args.no_optimise {
         cmd!("nix", "store", "optimise").run()?;

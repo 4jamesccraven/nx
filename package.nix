@@ -12,13 +12,21 @@ rustPlatform.buildRustPackage {
 
   cargoLock.lockFile = ./Cargo.lock;
 
-  nativeBuildInputs = [ installShellFiles ];
+  nativeBuildInputs = [
+    installShellFiles
+    makeBinaryWrapper
+  ];
 
   postInstall = ''
     installShellCompletion --cmd nx \
       --bash <(COMPLETE=bash $out/bin/nx) \
       --zsh  <(COMPLETE=zsh $out/bin/nx) \
       --fish <(COMPLETE=fish $out/bin/nx) \
+  '';
+
+  postFixup = ''
+    wrapProgram $out/bin/nx \
+      --prefix PATH : ${lib.makeBinPath [ nh ]}
   '';
 
   meta = {
