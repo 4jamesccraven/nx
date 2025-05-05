@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 anyhow = "1.0.98"
-clap = { version = "4.5.32", features = ["derive"] }
+clap = { version = "4.5.32", features = ["cargo", "derive"] }
 clap_complete = { version = "4.5.47", features = ["unstable-dynamic"] }
 dirs = "6.0.0"
 duct = "0.13.7"

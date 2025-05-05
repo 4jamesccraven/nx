@@ -1,7 +1,16 @@
 use clap::clap_derive::{Parser, Subcommand};
+use clap::crate_version;
 
 #[derive(Parser, Debug)]
-#[command(name = "nx", about = "Command wrapper for my nixos system")]
+#[command(
+    name = "nx",
+    version = crate_version!(),
+    about = concat!(
+        "a wrapper of a wrapper of the nix cli ",
+        "suite, which is a wrapper of the nix command"
+    ),
+    disable_help_subcommand = true
+)]
 pub struct Cli {
     #[command(subcommand)]
     pub command: SubCommand,
@@ -10,18 +19,18 @@ pub struct Cli {
 #[deny(missing_docs)]
 #[derive(Subcommand, Debug)]
 pub enum SubCommand {
-    /// Rebuild the system from the current configuration
+    /// Build the system
     #[command(alias = "b")]
     Build(Build),
-    /// Clean up unused derivations and profiles
+    /// Clean unused store paths
     Clean(Clean),
-    /// Push changes (use after an update)
+    /// Push a system upate
     Push,
-    /// Update the system config
+    /// Update the system
     Update,
     /// Revert to HEAD
     Revert,
-    /// Wrapper for nix develop
+    /// Activate a devShell
     #[command(aliases = ["dev", "d"])]
     Develop(Develop),
 }
@@ -40,10 +49,6 @@ pub struct Clean {
     /// Do not run nix optimise after rebuilding
     #[arg(long)]
     pub no_optimise: bool,
-
-    /// Do not cache shells
-    #[arg(long)]
-    pub no_cache: bool,
 }
 
 #[deny(missing_docs)]
