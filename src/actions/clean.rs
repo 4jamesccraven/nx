@@ -9,6 +9,8 @@ pub fn clean(args: Clean) -> Result<()> {
 
     cmd!("nh", "clean", "all").run()?;
 
+    cmd!("nx", "build", "--fast").run()?;
+
     if !args.no_optimise {
         cmd!("nix", "store", "optimise").run()?;
     }
