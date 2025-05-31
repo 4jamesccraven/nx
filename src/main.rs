@@ -19,6 +19,7 @@ fn main() {
         Update => update(),
         Revert => revert(),
         Develop(sub_args) => develop(sub_args),
+        Sync => sync(),
     };
 
     if let Err(e) = ok {

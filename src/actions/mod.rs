@@ -3,6 +3,7 @@ mod clean;
 mod develop;
 mod push;
 mod revert;
+mod sync;
 mod update;
 
 pub use build::build;
@@ -10,6 +11,7 @@ pub use clean::clean;
 pub use develop::develop;
 pub use push::push;
 pub use revert::revert;
+pub use sync::sync;
 pub use update::update;
 
 use crate::config::Config;

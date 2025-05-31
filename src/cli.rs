@@ -33,6 +33,9 @@ pub enum SubCommand {
     /// Activate a devShell
     #[command(aliases = ["dev", "d"])]
     Develop(Develop),
+    /// Synchronise the system with upstream
+    #[command(aliases = ["s"])]
+    Sync,
 }
 
 #[deny(missing_docs)]
