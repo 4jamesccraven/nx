@@ -16,7 +16,7 @@ fn main() {
         Build(sub_args) => build(sub_args),
         Clean(sub_args) => clean(sub_args),
         Push => push(),
-        Update => update(),
+        Update(sub_args) => update(sub_args),
         Revert => revert(),
         Develop(sub_args) => develop(sub_args),
         Sync => sync(),

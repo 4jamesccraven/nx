@@ -27,7 +27,7 @@ pub enum SubCommand {
     /// Push a system upate
     Push,
     /// Update the system
-    Update,
+    Update(Update),
     /// Revert to HEAD
     Revert,
     /// Activate a devShell
@@ -52,6 +52,13 @@ pub struct Clean {
     /// Do not run nix optimise after rebuilding
     #[arg(long)]
     pub no_optimise: bool,
+}
+
+#[deny(missing_docs)]
+#[derive(Parser, Debug)]
+pub struct Update {
+    /// The flake input to update
+    pub input: Option<String>,
 }
 
 #[deny(missing_docs)]
