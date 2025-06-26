@@ -2,7 +2,6 @@ use std::fs;
 
 use anyhow::{Context, Result};
 use dirs::config_dir;
-use ron;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -19,7 +18,7 @@ impl Config {
 
         let config = fs::read_to_string(&config_dir).context("could not read config directory")?;
 
-        let config: Config = ron::from_str(&config.trim())?;
+        let config: Config = ron::from_str(config.trim())?;
 
         Ok(config)
     }

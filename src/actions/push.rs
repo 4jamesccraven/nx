@@ -5,7 +5,7 @@ pub fn push() -> Result<()> {
 
     cmd!("git", "add", "flake.lock").run()?;
 
-    cmd!("git", "commit", "-m", "Chore: system update").run()?;
+    cmd!("git", "commit", "-m", "chore: system update").run()?;
 
     cmd!("git", "push").run()?;
 

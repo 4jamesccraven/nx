@@ -5,7 +5,7 @@ use std::process::Command;
 pub fn revert() -> Result<()> {
     change_to_config()?;
 
-    let _print_warning = reversion_warning()?;
+    reversion_warning()?;
 
     let mut response = String::new();
 
